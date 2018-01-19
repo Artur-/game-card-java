@@ -3,10 +3,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.vaadin.artur</groupId>
-    <artifactId>my_starter_project</artifactId>
+    <groupId>com.vaadin.artur.gamecard</groupId>
+    <artifactId>game-card-java</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>My Starter Project</name>
+    <name>Game Card</name>
     <description>Integration of game-card for Vaadin 10</description>
 
     <properties>
