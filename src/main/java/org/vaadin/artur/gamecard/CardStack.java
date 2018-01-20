@@ -1,25 +1,49 @@
 package org.vaadin.artur.gamecard;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.vaadin.artur.gamecard.data.CardInfo;
+import org.vaadin.artur.gamecard.event.ClickEventWithTargetElement;
+import org.vaadin.artur.gamecard.event.DoubleClickEventWithTargetElement;
+import org.vaadin.artur.gamecard.event.HasClickListenersWithTarget;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.shared.Registration;
 
 /**
  * A card stack shows 0-N cards on top of each other but offset so that you can
  * see the rank and suite of all cards which are face up.
  */
-public class CardStack extends Composite<Div> {
+public class CardStack extends Composite<Div>
+        implements HasClickListenersWithTarget<CardStack, Card> {
     private int OFFSET = Card.HEIGHT / 6;
     private List<Card> cards = new ArrayList<>();
+    private Map<Card, Registration> cardClickListeners = new HashMap<>();
+    private Map<Card, Registration> cardDoubleClickListeners = new HashMap<>();
 
     public CardStack() {
         getElement().getStyle().set("width", Card.WIDTH + "px");
+        getElement().getStyle().set("display", "inline-block");
         getElement().getStyle().set("position", "relative");
+        getElement().addEventListener("click", e -> {
+            if (e.getEventData().getBoolean("event.target == element")) {
+                fireEvent(new ClickEventWithTargetElement<>(CardStack.this,
+                        true, null));
+            }
+        }, "event.target == element");
+
+        getElement().addEventListener("dblclick", e -> {
+            if (e.getEventData().getBoolean("event.target == element")) {
+                fireEvent(new DoubleClickEventWithTargetElement<>(
+                        CardStack.this, true, null));
+            }
+        }, "event.target == element");
+
     }
 
     public boolean isEmpty() {
@@ -57,6 +81,14 @@ public class CardStack extends Composite<Div> {
 
     public void addCard(Card card) {
         cards.add(card);
+        cardClickListeners.put(card, card.addClickListener(e -> {
+            fireEvent(new ClickEventWithTargetElement<>(CardStack.this,
+                    e.isFromClient(), card));
+        }));
+        cardDoubleClickListeners.put(card, card.addDoubleClickListener(e -> {
+            fireEvent(new DoubleClickEventWithTargetElement<>(CardStack.this,
+                    e.isFromClient(), card));
+        }));
         getContent().add(card);
         setCardTopOffset(cards.size() - 1);
         updateLayoutHeight();
@@ -74,6 +106,8 @@ public class CardStack extends Composite<Div> {
         }
 
         cards.remove(card);
+        cardClickListeners.remove(card).remove();
+        cardDoubleClickListeners.remove(card).remove();
         getContent().remove(card);
 
         for (int i = cardIndex; i < getNumberOfCards(); i++) {
@@ -104,6 +138,10 @@ public class CardStack extends Composite<Div> {
     public void removeAllCards() {
         getContent().removeAll();
         cards.clear();
+        cardClickListeners.forEach((card, reg) -> reg.remove());
+        cardDoubleClickListeners.forEach((card, reg) -> reg.remove());
+        cardClickListeners.clear();
+        cardDoubleClickListeners.clear();
         updateLayoutHeight();
     }
 

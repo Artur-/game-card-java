@@ -32,9 +32,6 @@ public class DemoView extends Div {
         deck.addClickListener(event -> {
             if (!deck.isEmpty()) {
                 Card card = new Card(deck.removeTopCard());
-                card.addClickListener(e -> {
-                    card.setSelected(!card.isSelected());
-                });
                 getNextStack().addCard(card);
             }
         });
@@ -66,8 +63,13 @@ public class DemoView extends Div {
             });
             stack.addCard(card);
         }
+
         stackLayout.add(stack);
         nextStack = new CardStack();
+        nextStack.addClickListener(e -> {
+            Card card = e.getTarget();
+            card.setSelected(!card.isSelected());
+        });
         stackLayout.add(nextStack);
 
         add(stackLayout);

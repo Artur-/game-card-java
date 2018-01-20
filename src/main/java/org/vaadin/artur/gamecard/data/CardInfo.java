@@ -105,4 +105,9 @@ public class CardInfo {
                 && getRank() == reference.getRank() - 1;
     }
 
+    @Override
+    public String toString() {
+        return "CardInfo [symbol=" + symbol + ", rank=" + rank + "]";
+    }
+
 }
