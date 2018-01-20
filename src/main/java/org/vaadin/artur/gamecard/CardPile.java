@@ -19,13 +19,13 @@ import com.vaadin.flow.dom.Style;
  */
 @Tag("game-card-pile")
 @HtmlImport("bower_components/game-card/game-card-pile.html")
-public class CardPile extends Component
-        implements HasClickListeners<Card>, HasDoubleClickListeners<Card> {
-    private static final String TOP_CARD_RANK = "top-card-rank";
+public class CardPile extends Component implements HasClickListeners<CardPile>,
+        HasDoubleClickListeners<CardPile> {
+    private static final String TOP_CARD_RANK = "topCardRank";
 
-    private static final String TOP_CARD_SYMBOL = "top-card-symbol";
+    private static final String TOP_CARD_SYMBOL = "topCardSymbol";
 
-    private static final String TOP_CARD_SELECTED = "top-card-highlighted";
+    private static final String TOP_CARD_SELECTED = "topCardHighlighted";
 
     private List<CardInfo> cards = new ArrayList<>();
 
