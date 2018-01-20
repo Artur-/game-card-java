@@ -69,7 +69,7 @@ public class Card extends Component
     }
 
     public boolean isSelected() {
-        return getElement().getProperty(HIGHLIGHTED) != null;
+        return getElement().getProperty(HIGHLIGHTED, false);
     }
 
     public void setSelected(boolean selected) {
